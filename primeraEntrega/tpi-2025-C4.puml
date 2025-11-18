@@ -1,0 +1,40 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' Puedes agregar un theme si quieres
+' !theme plain
+
+title Diagrama de Contenedores - TPI Backend 2025
+
+' Personas externas
+Person(cliente, "Cliente", "Usuario que solicita un transporte de contenedor")
+Person(operador, "Operador", "Administra rutas, camiones y depósitos")
+Person(transportista, "Transportista", "Conductor del camión asignado")
+
+' Sistema principal
+System_Boundary(sistema, "Sistema de Logística de Contenedores") {
+
+Container(gateway, "API Gateway", "Spring Cloud Gateway", "Rutea las peticiones hacia los microservicios")
+Container(orders, "Orders Service", "Spring Boot + PostgreSQL", "Gestiona clientes, solicitudes, contenedores y tarifas")
+Container(fleet, "Fleet Service", "Spring Boot + PostgreSQL", "Gestiona camiones, depósitos, rutas y tramos")
+ContainerDb(db_orders, "DB Orders", "PostgreSQL", "Almacena datos de clientes, solicitudes y contenedores")
+ContainerDb(db_fleet, "DB Fleet", "PostgreSQL", "Almacena datos de camiones, rutas, tramos y depósitos")
+Container(keycloak, "Keycloak", "Keycloak", "Autenticación y control de acceso mediante JWT")
+Container_Ext(googleApi, "Google Maps Distance Matrix API", "API externa", "Provee distancias y tiempos entre ubicaciones")
+}
+
+' Relaciones externas
+Rel(cliente, gateway, "Usa la aplicación", "HTTPS + JWT")
+Rel(operador, gateway, "Usa la aplicación", "HTTPS + JWT")
+Rel(transportista, gateway, "Usa la aplicación", "HTTPS + JWT")
+
+' Internas
+Rel(gateway, orders, "Redirige peticiones REST")
+Rel(gateway, fleet, "Redirige peticiones REST")
+Rel(orders, db_orders, "Lectura/Escritura", "JDBC")
+Rel(fleet, db_fleet, "Lectura/Escritura", "JDBC")
+Rel(orders, fleet, "Consulta rutas asignadas", "REST")
+Rel(fleet, googleApi, "Solicita distancia y tiempo", "HTTPS")
+Rel(gateway, keycloak, "Validación de token", "OIDC")
+Rel(cliente, keycloak, "Inicio de sesión", "OAuth2")
+@enduml
+

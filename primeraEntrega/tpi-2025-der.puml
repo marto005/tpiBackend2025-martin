@@ -1,0 +1,114 @@
+@startuml
+!theme plain
+title DER General - Sistema de Logística de Contenedores (TPI 2025)
+
+' ========================
+' ORDERS SERVICE
+' ========================
+package "Orders Service" #LightSkyBlue {
+entity Cliente {
+*id : UUID
+--
+nombre : VARCHAR
+email : VARCHAR
+telefono : VARCHAR
+}
+
+entity Contenedor {
+*id : UUID
+--
+codigoUnico : VARCHAR
+peso : NUMERIC
+volumen : NUMERIC
+estado : VARCHAR
+}
+
+entity Tarifa {
+*id : UUID
+--
+descripcion : VARCHAR
+valorKmBase : NUMERIC
+valorLitroCombustible : NUMERIC
+cargoGestionTramo : NUMERIC
+}
+
+entity Solicitud {
+*id : UUID
+--
+numero : VARCHAR
+cliente_id : UUID (FK)
+contenedor_id : UUID (FK)
+estado : VARCHAR
+costoEstimado : NUMERIC
+tiempoEstimado : INT
+costoFinal : NUMERIC
+tiempoReal : INT
+}
+
+Cliente ||--o{ Solicitud
+Solicitud ||--|| Contenedor
+Tarifa ||.. Solicitud : "usada para cálculo de costos"
+}
+
+' ========================
+' FLEET SERVICE
+' ========================
+package "Fleet Service" #LightGreen {
+entity Camion {
+*id : UUID
+--
+dominio : VARCHAR
+nombreTransportista : VARCHAR
+telefono : VARCHAR
+capacidadPeso : NUMERIC
+capacidadVolumen : NUMERIC
+consumoLKm : NUMERIC
+costoBaseKm : NUMERIC
+disponible : BOOLEAN
+}
+
+entity Deposito {
+*id : UUID
+--
+nombre : VARCHAR
+direccion : VARCHAR
+latitud : NUMERIC
+longitud : NUMERIC
+costoEstadiaDiario : NUMERIC
+}
+
+entity Ruta {
+*id : UUID
+--
+solicitudId : UUID
+cantidadTramos : INT
+}
+
+entity Tramo {
+*id : UUID
+--
+ruta_id : UUID (FK)
+tipo : VARCHAR
+estado : VARCHAR
+costoAproximado : NUMERIC
+costoReal : NUMERIC
+fechaHoraIniEst : TIMESTAMP
+fechaHoraFinEst : TIMESTAMP
+fechaHoraIniReal : TIMESTAMP
+fechaHoraFinReal : TIMESTAMP
+camion_id : UUID (FK)
+deposito_origen_id : UUID (FK, nullable)
+deposito_destino_id : UUID (FK, nullable)
+}
+
+Ruta ||--o{ Tramo
+Tramo }o--|| Camion
+Tramo }o--|| Deposito : "depósito origen (opcional)"
+Tramo }o--|| Deposito : "depósito destino (opcional)"
+}
+
+' ========================
+' RELACIÓN LÓGICA ENTRE SERVICIOS
+' ========================
+Solicitud ||.. Ruta : "solicitudId (referencia cruzada)"
+@enduml

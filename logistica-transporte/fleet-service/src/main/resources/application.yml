@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/tpi-2025/protocol/openid-connect/certs
+
+logging:
+  level:
+    org.springframework.security: INFO
+
+google:
+  maps:
+    base-url: https://maps.googleapis.com/maps/api/distancematrix/json
+    api-key: ${GOOGLE_MAPS_API_KEY}
+
+
