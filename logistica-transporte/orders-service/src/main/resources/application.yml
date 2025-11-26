@@ -9,9 +9,9 @@ spring:
           issuer-uri: ${KEYCLOAK_URL}
 
   datasource:
-    url: jdbc:postgresql://tpi-db:5432/ordersdb
-    username: user
-    password: pass
+    url: jdbc:postgresql://tpi-db:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
   jpa:
     hibernate:
       ddl-auto: update

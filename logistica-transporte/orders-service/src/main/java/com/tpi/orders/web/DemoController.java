@@ -12,17 +12,17 @@ public class DemoController {
 
     @GetMapping("/publico/ping")
     public Map<String, String> publico() {
-        return Map.of("msg","pong publico (fleet)");
+        return Map.of("msg","pong publico (orders)");
     }
 
     @GetMapping("/protegido-usuarios/ping")
     public Map<String, String> usuarios() {
-        return Map.of("msg","pong usuarios/admin (fleet)");
+        return Map.of("msg","pong usuarios/admin (orders)");
     }
 
     @GetMapping("/protegido-administradores/ping")
     public Map<String, String> admin() {
-        return Map.of("msg","pong admin (fleet)");
+        return Map.of("msg","pong admin (orders)");
     }
 
     @GetMapping("/me")

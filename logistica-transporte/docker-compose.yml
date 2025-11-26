@@ -3,12 +3,16 @@ version: '3.9'
 services:
   fleet-service:
     build:
-      context: ./fleet-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+          MODULE: fleet-service
     container_name: fleet-service
     env_file: [ .env ]
+    ports:
+      - "${FLEET_PORT}:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:${DB_PORT}/${DB_NAME}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://tpi-db:${DB_PORT}/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       KEYCLOAK_URL: ${KEYCLOAK_URL}
@@ -19,12 +23,16 @@ services:
 
   orders-service:
     build:
-      context: ./orders-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+       MODULE: orders-service
     container_name: orders-service
     env_file: [ .env ]
+    ports:
+      - "${ORDER_PORT}:8101"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:${DB_PORT}/${DB_NAME}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://tpi-db:${DB_PORT}/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       KEYCLOAK_URL: ${KEYCLOAK_URL}
@@ -58,7 +66,11 @@ services:
       - keycloak_data:/opt/keycloak/data
 
   gateway-service:
-    build: ./gateway-service
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: gateway-service
     container_name: gateway-service
     ports:
       - "${GATEWAY_PORT}:8080"

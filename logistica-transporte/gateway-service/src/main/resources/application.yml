@@ -5,6 +5,12 @@ spring:
   application:
     name: gateway-service
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL}
+
   cloud:
     gateway:
       routes:
@@ -18,11 +24,15 @@ spring:
 
         # RUTA A FLEET
         - id: fleet-service
-          uri: http://fleet-service:8102
+          uri: http://fleet-service:8080
           predicates:
             - Path=/fleet/**
           filters:
             - StripPrefix=1
+
+logging:
+  level:
+    org.springframework.security: INFO
 
 management:
   endpoints:
@@ -32,3 +42,4 @@ management:
   endpoint:
     health:
       show-details: always
+

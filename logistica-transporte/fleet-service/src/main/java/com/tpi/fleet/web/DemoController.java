@@ -15,6 +15,11 @@ public class DemoController {
         return Map.of("msg","pong publico (fleet)");
     }
 
+    @GetMapping("/publico/test")
+    public Map<String, String> publicoTest() {
+        return Map.of("msg","test publico (fleet)");
+    }
+
     @GetMapping("/protegido-usuarios/ping")
     public Map<String, String> usuarios() {
         return Map.of("msg","pong usuarios/admin (fleet)");

@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://db:${DB_PORT}/${DB_NAME}
+    url: jdbc:postgresql://tpi-db:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASS}
 
@@ -16,7 +16,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak:8080/realms/tpi-2025/protocol/openid-connect/certs
+          issuer-uri: ${KEYCLOAK_URL}
 
 logging:
   level:
